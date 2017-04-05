@@ -16,7 +16,7 @@ def get_data(r):
     rv = {}
     rv['xx']  = np.fromstring(r.read('xx', 8*NCHANS), dtype='>i8')
     rv['yy']  = np.fromstring(r.read('yy', 8*NCHANS), dtype='>i8')
-    rv['xy']  = np.fromstring(r.read('xy_r', 8*NCHANS), dtype='>i8') + 1j*np.fromstring(r.read('xy_r', 8*NCHANS), dtype='>i8')
+    rv['xy']  = np.fromstring(r.read('xy_r', 8*NCHANS), dtype='>i8') + 1j*np.fromstring(r.read('xy_i', 8*NCHANS), dtype='>i8')
     return rv
 
 def write_file(d, t, prefix='dat_poco_snap_simple'):
