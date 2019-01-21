@@ -32,14 +32,13 @@ if __name__ == '__main__':
                         help='FFT shift schedule as an integer. Default:0xffff')
     parser.add_argument('-a', '--acc_len', type=int, default=2**20,
                         help='Number of spectra to accumulate. Default:2^20')
-    parser.add_argument('-t', '--filetime', type=int, default=600,
-                        help='Time in seconds of each data file. Default:600')
     parser.add_argument('-s', '--snap', default='10.10.10.101',
                         help='SNAP hostname of IP. Default:10.10.10.101')
     parser.add_argument('-i', '--dest_ip', default='10.0.0.100',
                         help='Destination IP. Default:10.0.0.100')
-    parser.add_argument('-m', '--dest_mac', type=int, default=0x020304050607,
-                        help='Destination MAC address. Default:0x020304050607')
+    parser.add_argument('-m', '--dest_mac', type=str, default="0x020304050607",
+                        help='Destination MAC address. Must be specified as \
+                              a hex string. Default:0x020304050607')
     parser.add_argument('-P', '--dest_port', type=int, default=10000,
                         help='Destination UDP port. Default:10000')
     parser.add_argument('-S', '--spec_per_packet', type=int, default=8,
@@ -62,6 +61,7 @@ if __name__ == '__main__':
     if opts.prog:
         print 'Trying to program with fpgfile %s' % opts.fpgfile
         print '(You probably don\'t want to do this -- this script won\'t configure the ADCs)'
+        print 'TODO: see the spectrometer tutorial for details of how to calibrate SNAP\'s ADCs using casperfpga'
         r.upload_to_ram_and_program(opts.fpgfile)
         print 'done'
 
@@ -101,8 +101,9 @@ if __name__ == '__main__':
     r.write_int('gbe_output_dest_port', opts.dest_port)
     #print 'Setting 1GbE destination Mac to 0x%x' % opts.dest_mac
     ## just set every available destination in the arp table to the same address for laziness
-    #for i in range(256):
-    #    r.write('gbe_output_one_gbe', struct.pack('>Q', opts.dest_mac), offset=0x3000 + 8*i)
+    mac = int(opts.dest_mac, 16)
+    for i in range(256):
+        r.write('gbe_output_one_gbe', struct.pack('>Q', mac), offset=0x3000 + 8*i)
     print 'Enabling 1GbE output core'
     r.write_int('gbe_output_en', 1)
     r.write_int('output_rst', 0) # will start sending on next sync
