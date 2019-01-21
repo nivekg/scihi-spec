@@ -1,0 +1,5 @@
+.Xil/
+quad_input_poco_gbe/
+!quad_input_poco_gbe/outputs/*.fpg
+*.log
+*.autosave
