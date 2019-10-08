@@ -3,3 +3,7 @@ quad_input_poco_gbe/
 !quad_input_poco_gbe/outputs/*.fpg
 *.log
 *.autosave
+extadc_snap_spec_4k/
+!extadc_snap_spec_4k/outputs/*.fpg
+extadc_snap_spec_8k/
+!extadc_snap_spec_8k/outputs/*.fpg
